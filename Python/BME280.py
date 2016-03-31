@@ -18,34 +18,62 @@ b1 = bus.read_i2c_block_data(0x76, 0x88, 24)
 # Temp coefficents
 dig_T1 = b1[1] * 256 + b1[0]
 dig_T2 = b1[3] * 256 + b1[2]
+if dig_T2 > 32767 :
+    dig_T2 -= 65536
 dig_T3 = b1[5] * 256 + b1[4]
+if dig_T3 > 32767 :
+    dig_T3 -= 65536
 
 # Pressure coefficents
 dig_P1 = b1[7] * 256 + b1[6]
 dig_P2 = b1[9] * 256 + b1[8]
+if dig_P2 > 32767 :
+    dig_P2 -= 65536
 dig_P3 = b1[11] * 256 + b1[10]
+if dig_P3 > 32767 :
+    dig_P3 -= 65536
 dig_P4 = b1[13] * 256 + b1[12]
+if dig_P4 > 32767 :
+    dig_P4 -= 65536
 dig_P5 = b1[15] * 256 + b1[14]
+if dig_P5 > 32767 :
+    dig_P5 -= 65536
 dig_P6 = b1[17] * 256 + b1[16]
+if dig_P6 > 32767 :
+    dig_P6 -= 65536
 dig_P7 = b1[19] * 256 + b1[18]
+if dig_P7 > 32767 :
+    dig_P7 -= 65536
 dig_P8 = b1[21] * 256 + b1[20]
+if dig_P8 > 32767 :
+    dig_P8 -= 65536
 dig_P9 = b1[23] * 256 + b1[22]
-
-# BME280 address, 0x76(118)
-# Read data back from 0xE1(225), 7 bytes
-b1 = bus.read_i2c_block_data(0x76, 0xE1, 7)
-
-# Convert the data
-# Humidity coefficents
-dig_H2 = b1[1] * 256 + b1[0]
-dig_H3 = (b1[2] &  0xFF)
-dig_H4 = (b1[3] * 16) + (b1[4] & 0xF)
-dig_H5 = (b1[4] / 16) + (b1[5] * 16)
-dig_H6 = b1[6]
+if dig_P9 > 32767 :
+    dig_P9 -= 65536
 
 # BME280 address, 0x76(118)
 # Read data back from 0xA1(161), 1 byte
 dig_H1 = bus.read_byte_data(0x76, 0xA1)
+
+# BME280 address, 0x76(118)
+# Read data back from 0xE1(225), 7 bytes
+data = bus.read_i2c_block_data(0x76, 0xE1, 7)
+
+# Convert the data
+# Humidity coefficents
+dig_H2 = b1[1] * 256 + b1[0]
+if dig_H2 > 32767 :
+    dig_H2 -= 65536
+dig_H3 = (b1[2] &  0xFF)
+dig_H4 = (b1[3] * 16) + (b1[4] & 0xF)
+if dig_H4 > 32767 :
+    dig_H4 -= 65536
+dig_H5 = (b1[4] / 16) + (b1[5] * 16)
+if dig_H5 > 32767 :
+    dig_H5 -= 65536
+dig_H6 = b1[6]
+if dig_H6 > 127 :
+    dig_H6 -= 256
 
 # BME280 address, 0x76(118)
 # Select control humidity register, 0xF2(242)
@@ -101,9 +129,9 @@ var_H = ((t_fine) - 76800.0)
 var_H = (adc_h - (dig_H4 * 64.0 + dig_H5 / 16384.0 * var_H)) * (dig_H2 / 65536.0 * (1.0 + dig_H6 / 67108864.0 * var_H * (1.0 + dig_H3 / 67108864.0 * var_H)))
 humidity = var_H * (1.0 -  dig_H1 * var_H / 524288.0)
 if humidity > 100.0 :
-	humidity = 100.0
+    humidity = 100.0
 elif humidity < 0.0 :
-	humidity = 0.0
+    humidity = 0.0
 
 # Output data to screen
 print "Temperature in Celsius : %.2f C" %cTemp
