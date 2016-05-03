@@ -57,7 +57,7 @@ dig_H1 = bus.read_byte_data(0x76, 0xA1)
 
 # BME280 address, 0x76(118)
 # Read data back from 0xE1(225), 7 bytes
-data = bus.read_i2c_block_data(0x76, 0xE1, 7)
+b1 = bus.read_i2c_block_data(0x76, 0xE1, 7)
 
 # Convert the data
 # Humidity coefficents
