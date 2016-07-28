@@ -29,7 +29,7 @@ void main()
 	char b1[24] = {0};
 	if(read(file, b1, 24) != 24)
 	{
-		printf("Erorr : Input/output Erorr \n");
+		printf("Error : Input/Output error \n");
 		exit(1);
 	}
 
