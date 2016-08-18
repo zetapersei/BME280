@@ -53,7 +53,8 @@ if dig_P9 > 32767 :
 
 # BME280 address, 0x76(118)
 # Read data back from 0xA1(161), 1 byte
-dig_H1 = i2c.readBytes(0x76, 0xA1, 1)
+b1 = i2c.readBytes(0x76, 0xA1, 1)
+dig_H2 = b1[0]
 
 # BME280 address, 0x76(118)
 # Read data back from 0xE1(225), 7 bytes
