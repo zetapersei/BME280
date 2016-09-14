@@ -15,7 +15,7 @@ bus = smbus.SMBus(1)
 b1 = bus.read_i2c_block_data(0x76, 0x88, 24)
 
 # Convert the data
-# Temp coefficents
+# Temp coefficients
 dig_T1 = b1[1] * 256 + b1[0]
 dig_T2 = b1[3] * 256 + b1[2]
 if dig_T2 > 32767 :
@@ -24,7 +24,7 @@ dig_T3 = b1[5] * 256 + b1[4]
 if dig_T3 > 32767 :
     dig_T3 -= 65536
 
-# Pressure coefficents
+# Pressure coefficients
 dig_P1 = b1[7] * 256 + b1[6]
 dig_P2 = b1[9] * 256 + b1[8]
 if dig_P2 > 32767 :
@@ -60,7 +60,7 @@ dig_H1 = bus.read_byte_data(0x76, 0xA1)
 b1 = bus.read_i2c_block_data(0x76, 0xE1, 7)
 
 # Convert the data
-# Humidity coefficents
+# Humidity coefficients
 dig_H2 = b1[1] * 256 + b1[0]
 if dig_H2 > 32767 :
     dig_H2 -= 65536
