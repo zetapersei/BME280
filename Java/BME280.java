@@ -23,7 +23,7 @@ public class BME280
         device.read(0x88, b1, 0, 24);
         
         // Convert the data
-        // temp coefficents
+        // temp coefficients
         int dig_T1 = (b1[0] & 0xFF) + ((b1[1] & 0xFF) * 256);
         int dig_T2 = (b1[2] & 0xFF) + ((b1[3] & 0xFF) * 256);
         if(dig_T2 > 32767)
@@ -36,7 +36,7 @@ public class BME280
             dig_T3 -= 65536;
         }
         
-        // pressure coefficents
+        // pressure coefficients
         int dig_P1 = (b1[6] & 0xFF) + ((b1[7] & 0xFF) * 256);
         int dig_P2 = (b1[8] & 0xFF) + ((b1[9] & 0xFF) * 256);
         if(dig_P2 > 32767)
@@ -86,7 +86,7 @@ public class BME280
         device.read(0xE1, b1, 0, 7);
         
         // Convert the data
-        // humidity coefficents
+        // humidity coefficients
         int dig_H2 = (b1[0] & 0xFF) + (b1[1] * 256);
         if(dig_H2 > 32767)
         {
