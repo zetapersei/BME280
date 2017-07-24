@@ -9,9 +9,16 @@
 #include <linux/i2c-dev.h>
 #include <sys/ioctl.h>
 #include <fcntl.h>
+#include <mysql.h>
 
 void main()
 {
+	// Mysql variables
+	MYSQL_RES *result;
+        MYSQL_ROW row;
+	MYSQL *connection, mysql;
+	
+	
 	// Create I2C bus
 	int file;
 	char *bus = "/dev/i2c-1";
@@ -194,4 +201,16 @@ void main()
 	printf("Temperature in Fahrenheit : %.2f F \n", fTemp);
 	printf("Pressure : %.2f hPa \n", pressure);
 	printf("Relative Humidity : %.2f RH \n", humidity);
+	
+	// Initialization Mysql
+	mysql_init(&mysql);
+        connection = mysql_real_connect(&mysql,"localhost", "user", "passwd", 
+                                    "weather", 0, 0, 0);
+
+        if (connection == NULL) {
+                printf("%s", mysql_error(&mysql));
+                return 1;
+		}
+	
+	
 }
