@@ -204,7 +204,7 @@ void main()
 	
 	// Initialization Mysql
 	mysql_init(&mysql);
-        connection = mysql_real_connect(&mysql,"localhost", "pico", "maurizio", 
+        connection = mysql_real_connect(&mysql,"localhost", "pico", "pico", 
                                     "weather", 0, 0, 0);
 
         if (connection == NULL) {
