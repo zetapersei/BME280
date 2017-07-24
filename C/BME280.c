@@ -213,4 +213,14 @@ void main()
 		}
 	
 	
+	
+	state = mysql_query(connection,
+                "INSERT into wr_humidity values humidity");
+
+        if (state != 0) {
+                printf("%s", mysql_error(connection));
+                return 1;
+}
+	
+	
 }
