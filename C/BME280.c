@@ -14,8 +14,7 @@
 void main()
 {
 	// Mysql variables
-	MYSQL_RES *result;
-        MYSQL_ROW row;
+	
 	MYSQL *connection, mysql;
 	
 	
@@ -213,14 +212,19 @@ void main()
 		}
 	
 	
-	
-	state = mysql_query(connection,
-                "INSERT into wr_humidity values humidity");
+	char query[255] = "";
+
+        sprintf( query, "INSERT INTO wr_humidity (sensor_id, value) " "VALUES(1, %d)",(int)humidity );
+
+        int state = mysql_query(connection, query);
 
         if (state != 0) {
                 printf("%s", mysql_error(connection));
                 return 1;
-}
+                }
+
+	mysql_close(connection);
+	
 	
 	
 }
