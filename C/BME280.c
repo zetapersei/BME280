@@ -222,7 +222,29 @@ void main()
                 printf("%s", mysql_error(connection));
                 return 1;
                 }
+	
+	char query_1[255] = "";
 
+        sprintf( query_1, "INSERT INTO wr_temperature (sensor_id, value) " "VALUES(1, %.1f)",cTemp);
+
+        state = mysql_query(connection, query_1);
+
+        if (state != 0) {
+                printf("%s", mysql_error(connection));
+                return 1;
+                }
+	
+	char query_2[255] = "";
+
+        sprintf( query_2, "INSERT INTO wr_barometer(sensor_id, value) " "VALUES(1, %.f)", pressure);
+
+        state = mysql_query(connection, query_2);
+
+        if (state != 0) {
+                printf("%s", mysql_error(connection));
+                return 1;
+                }
+	
 	mysql_close(connection);
 	
 	
