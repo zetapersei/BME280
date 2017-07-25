@@ -1,7 +1,7 @@
-store_bme280.o: store_bme280.c
+bme280_store.o: bme280_store.c
 
-	gcc  -Wall -pedantic -std=c99  store_bme280.c  `mysql_config --cflags --libs` -o store_bme280
+	gcc  -Wall -pedantic -std=c99  bme280_store.c  `mysql_config --cflags --libs` -o bme280_store
 
 clean:
 
-rm -r store_bme280
+rm -r bme280_store
