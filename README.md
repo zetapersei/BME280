@@ -1,11 +1,8 @@
-[![BME280](BME280_I2CS.png)](https://www.controleverything.com/content/Humidity?sku=BME280_I2CS)
-# BME280
+
+
+# Modification for add the database code to store  the values using Mysql.
+
+# Original code:
 BME280 Digital Humidity, Pressure and Temperature Sensor
-
-# Modification
-The original code has been modified:
-
-- Adding the database code for store and read the values using Mysql.
-
-
-#####The code output is the relative humidity in %RH, pressure in hPa and temperature reading in degree celsius and fahrenheit.
+The code output is the relative humidity in %RH, pressure in hPa and temperature reading in degree celsius and fahrenheit.
+- 
