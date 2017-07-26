@@ -4,4 +4,4 @@ bme280_store.o: bme280_store.c
 
 clean:
 
-rm -r bme280_store
+	rm -r bme280_store
