@@ -221,7 +221,7 @@ void main()
 	
 	// Initialization Mysql
 	mysql_init(&mysql);
-        connection = mysql_real_connect(&mysql,"localhost", "pico", "pico", 
+        connection = mysql_real_connect(&mysql,"localhost", "pico", "maurizio", 
                                     "weather", 0, 0, 0);
 
         if (connection == NULL) {
@@ -232,7 +232,7 @@ void main()
 	
 	char query[255] = "";
 
-        sprintf( query, "INSERT INTO wr_humidity (sensor_id, value) " "VALUES(1, %d)",(int)humidity );
+        sprintf( query, "INSERT INTO wr_humidity (sensor_id, value) " "VALUES(5, %d)",(int)humidity );
 
         int state = mysql_query(connection, query);
 
@@ -243,7 +243,7 @@ void main()
 	
 	char query_1[255] = "";
 
-        sprintf( query_1, "INSERT INTO wr_temperature (sensor_id, value) " "VALUES(1, %.1f)",cTemp);
+        sprintf( query_1, "INSERT INTO wr_temperature (sensor_id, value) " "VALUES(5, %.1f)",cTemp);
 
         state = mysql_query(connection, query_1);
 
@@ -254,7 +254,7 @@ void main()
 	
 	char query_2[255] = "";
 
-        sprintf( query_2, "INSERT INTO wr_barometer(sensor_id, value) " "VALUES(1, %.f)", pressure);
+        sprintf( query_2, "INSERT INTO wr_barometer(sensor_id, value) " "VALUES(5, %.f)", pressure);
 
         state = mysql_query(connection, query_2);
 
