@@ -258,7 +258,7 @@ void main()
 	
 	char query[255] = "";
 
-        sprintf( query, "INSERT INTO wr_humidity (sensor_id, value) " "VALUES(5, %d)", kalmanFilter(humidity) );
+        sprintf( query, "INSERT INTO wr_humidity (sensor_id, value) " "VALUES(5, %d)",humidity);
 
         int state = mysql_query(connection, query);
 
@@ -280,7 +280,7 @@ void main()
 	
 	char query_2[255] = "";
 
-        sprintf( query_2, "INSERT INTO wr_barometer(sensor_id, value) " "VALUES(5, %.f)", kalmanFilter(pressure) );
+        sprintf( query_2, "INSERT INTO wr_barometer(sensor_id, value) " "VALUES(5, %.f)", pressure);
 
         state = mysql_query(connection, query_2);
 
