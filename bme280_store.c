@@ -192,8 +192,19 @@ void main()
 	config[0] = 0xF5;
 	config[1] = 0xA0;
 	write(file, config, 2);
+	
+	// Initialization Mysql
+	mysql_init(&mysql);
+        connection = mysql_real_connect(&mysql,"localhost", "pico", "maurizio", 
+                                    "weather", 0, 0, 0);
 
-	// Read 8 bytes of data from register(0xF7)
+        if (connection == NULL) {
+                printf("%s", mysql_error(&mysql));
+                return 1;
+		}
+	
+for(int idx = 1; idx <= 20; idx++)
+{	// Read 8 bytes of data from register(0xF7)
 	// pressure msb1, pressure msb, pressure lsb, temp msb1, temp msb, temp lsb, humidity lsb, humidity msb
 	reg[0] = 0xF7;
 	write(file, reg, 1);
@@ -245,16 +256,6 @@ void main()
 	printf("Pressure : %.2f hPa \n", pressure);
 	printf("Relative Humidity : %.2f RH \n", humidity);
 	
-	// Initialization Mysql
-	mysql_init(&mysql);
-        connection = mysql_real_connect(&mysql,"localhost", "pico", "maurizio", 
-                                    "weather", 0, 0, 0);
-
-        if (connection == NULL) {
-                printf("%s", mysql_error(&mysql));
-                return 1;
-		}
-	
 	
 	char query[255] = "";
 
@@ -288,6 +289,8 @@ void main()
                 printf("%s", mysql_error(connection));
                 return 1;
                 }
+	sleep(1000);
+   }
 	
 	mysql_close(connection);
 	
