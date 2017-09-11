@@ -34,6 +34,13 @@
 #include <mysql.h>
 
 #define TEMP_DIFF 10
+time_t t;
+int error = 0;
+struct tm *local;
+
+// Mysql variables
+	
+MYSQL *connection, mysql;
 
 static const char LANG_DB_TEMP_DIFF[] = "\nWARNING: Temperature difference out of bonds (%f to %f). Data will NOT be saved!\n";
 
@@ -125,9 +132,7 @@ void saveTemperature(float temperature)
 
 void main()
 {
-	// Mysql variables
 	
-	MYSQL *connection, mysql;
 	
 	
 	// Create I2C bus
@@ -336,7 +341,7 @@ while(-1)
                 return 1;
                 }
 	
-	char temp1f[10];
+	float temp1f[10];
 	sprintf(temp1f, "%.f",cTemp);
 	saveTemperature(temp1f);
 	
