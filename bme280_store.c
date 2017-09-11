@@ -111,16 +111,16 @@ void saveTemperature(float temperature)
 
 		char query_1[255] = "";
 
-        	sprintf( query_1, "INSERT INTO wr_temperature (sensor_id, value) " "VALUES(5, %.1f)", TempkalmanFilter(cTemp) );
+        	sprintf( query_1, "INSERT INTO wr_temperature (sensor_id, value) " "VALUES(5, %.1f)", TempkalmanFilter(temperature) );
 
-        	state = mysql_query(connection, query_1);
+        	int state = mysql_query(connection, query_1);
 
         	if (state != 0) {
                 	printf("%s", mysql_error(connection));
                 	return 1;
                 }
 			
-		}
+		
 	}
 
 	t_old_min = local->tm_min;
@@ -341,9 +341,9 @@ while(-1)
                 return 1;
                 }
 	
-	float temp1f[10];
-	sprintf(temp1f, "%.f",cTemp);
-	saveTemperature(temp1f);
+	
+	
+	saveTemperature(cTemp);
 	
 	char query_2[255] = "";
 
