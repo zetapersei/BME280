@@ -223,7 +223,7 @@ void main()
                 return 1;
 		}
 	
-for(int idx = 1; idx <= 20; idx++)
+while(-1)
 {	// Read 8 bytes of data from register(0xF7)
 	// pressure msb1, pressure msb, pressure lsb, temp msb1, temp msb, temp lsb, humidity lsb, humidity msb
 	reg[0] = 0xF7;
@@ -279,7 +279,7 @@ for(int idx = 1; idx <= 20; idx++)
 	
 	char query[255] = "";
 
-        sprintf( query, "INSERT INTO wr_humidity (sensor_id, value) " "VALUES(5, %.f)",humidity);
+        sprintf( query, "INSERT INTO wr_humidity (sensor_id, value) " "VALUES(5, %.f)",HumkalmanFilter(humidity));
 
         int state = mysql_query(connection, query);
 
@@ -309,7 +309,7 @@ for(int idx = 1; idx <= 20; idx++)
                 printf("%s", mysql_error(connection));
                 return 1;
                 }
-	sleep(1000);
+	sleep(3);
    }
 	
 	mysql_close(connection);
