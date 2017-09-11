@@ -24,10 +24,19 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
+#include <time.h>
+#include <float.h>
+#include <math.h>
 #include <linux/i2c-dev.h>
 #include <sys/ioctl.h>
 #include <fcntl.h>
 #include <mysql.h>
+
+#define TEMP_DIFF 10
+
+static const char LANG_DB_TEMP_DIFF[] = "\nWARNING: Temperature difference out of bonds (%f to %f). Data will NOT be saved!\n";
+
 
 //------------------------------------------------------------------
 //Kalman Filter
@@ -72,6 +81,45 @@ float HumkalmanFilter(float inData)
  
     return inData;
     }
+
+
+void saveTemperature(float temperature)
+{
+	static signed int t_old_min = -1;
+	static float old_value = -FLT_MAX;
+
+	t = time(NULL);
+	local = localtime(&t);
+
+	/* Store if value has changed or not from same minute */
+	if (t_old_min != local->tm_min || old_value != temperature) {
+
+		/* Check for invalid values */
+		float difference = old_value - temperature;
+		if ((difference < -TEMP_DIFF || difference > TEMP_DIFF)
+		    && old_value != -FLT_MAX) {
+			printf(LANG_DB_TEMP_DIFF, old_value, temperature);
+			return;
+		}
+
+		char query_1[255] = "";
+
+        	sprintf( query_1, "INSERT INTO wr_temperature (sensor_id, value) " "VALUES(5, %.1f)", TempkalmanFilter(cTemp) );
+
+        	state = mysql_query(connection, query_1);
+
+        	if (state != 0) {
+                	printf("%s", mysql_error(connection));
+                	return 1;
+                }
+			
+		}
+	}
+
+	t_old_min = local->tm_min;
+	old_value = temperature;
+}
+
 
 // ----------------------------------------------------------------------------
 
@@ -288,16 +336,9 @@ while(-1)
                 return 1;
                 }
 	
-	char query_1[255] = "";
-
-        sprintf( query_1, "INSERT INTO wr_temperature (sensor_id, value) " "VALUES(5, %.1f)", TempkalmanFilter(cTemp) );
-
-        state = mysql_query(connection, query_1);
-
-        if (state != 0) {
-                printf("%s", mysql_error(connection));
-                return 1;
-                }
+	char temp1f[10];
+	sprintf(temp1f, "%.f",cTemp);
+	saveTemperature(temp1f);
 	
 	char query_2[255] = "";
 
