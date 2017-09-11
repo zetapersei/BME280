@@ -35,24 +35,44 @@
 //www.xuan.idv.tw
 //------------------------------------------------------------------
 
-float kalmanFilter(float inData)
+float TempkalmanFilter(float inData)
     {                        
-    static float prevData=0;
-    static float p=10, q=0.0001, r=0.05, kGain=0;
+    static float tempprevData=0;
+    static float tempp=10, tempq=0.0001, tempr=0.05, tempkGain=0;
  
     //Kalman filter function start*******************************
-    p = p+q;
-    kGain = p/(p+r);
+    tempp = tempp+tempq;
+    tempkGain = tempp/(tempp+tempr);
  
-    inData = prevData+(kGain*(inData-prevData));
+    inData = tempprevData+(tempkGain*(inData-tempprevData));
  
-    p = (1-kGain)*p;
+    tempp = (1-tempkGain)*tempp;
  
-	prevData = inData;
+	tempprevData = inData;
     //Kalman filter function stop********************************
  
     return inData;
     }
+
+float HumkalmanFilter(float inData)
+    {                        
+    static float humprevData=0;
+    static float hump=10, humq=0.0001, humr=0.05, humkGain=0;
+ 
+    //Kalman filter function start*******************************
+    hump = hump+humq;
+    humkGain = hump/(hump+humr);
+ 
+    inData = humprevData+(humkGain*(inData-humprevData));
+ 
+    hump = (1-humkGain)*hump;
+ 
+	humprevData = inData;
+    //Kalman filter function stop********************************
+ 
+    return inData;
+    }
+
 // ----------------------------------------------------------------------------
 
 void main()
@@ -259,7 +279,7 @@ for(int idx = 1; idx <= 20; idx++)
 	
 	char query[255] = "";
 
-        sprintf( query, "INSERT INTO wr_humidity (sensor_id, value) " "VALUES(5, %d)",humidity);
+        sprintf( query, "INSERT INTO wr_humidity (sensor_id, value) " "VALUES(5, %.f)",humidity);
 
         int state = mysql_query(connection, query);
 
@@ -270,7 +290,7 @@ for(int idx = 1; idx <= 20; idx++)
 	
 	char query_1[255] = "";
 
-        sprintf( query_1, "INSERT INTO wr_temperature (sensor_id, value) " "VALUES(5, %.1f)", kalmanFilter(cTemp) );
+        sprintf( query_1, "INSERT INTO wr_temperature (sensor_id, value) " "VALUES(5, %.1f)", TempkalmanFilter(cTemp) );
 
         state = mysql_query(connection, query_1);
 
