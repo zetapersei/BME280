@@ -90,10 +90,10 @@ float HumkalmanFilter(float inData)
     }
 
 
-void saveTemperature(float temperature)
+void saveTemperature(int temperature)
 {
 	static signed int t_old_min = -1;
-	static float old_value = -FLT_MAX;
+	static int old_value = -FLT_MAX;
 
 	t = time(NULL);
 	local = localtime(&t);
@@ -102,7 +102,7 @@ void saveTemperature(float temperature)
 	if (t_old_min != local->tm_min || old_value != temperature) {
 
 		/* Check for invalid values */
-		float difference = old_value - temperature;
+		int difference = old_value - temperature;
 		if ((difference < -TEMP_DIFF || difference > TEMP_DIFF)
 		    && old_value != -FLT_MAX) {
 			printf(LANG_DB_TEMP_DIFF, old_value, temperature);
@@ -111,7 +111,7 @@ void saveTemperature(float temperature)
 
 		char query_1[255] = "";
 
-        	sprintf( query_1, "INSERT INTO wr_temperature (sensor_id, value) " "VALUES(5, %.1f)", TempkalmanFilter(temperature) );
+        	sprintf( query_1, "INSERT INTO wr_temperature (sensor_id, value) " "VALUES(5, %u)", temperature );
 
         	int state = mysql_query(connection, query_1);
 
@@ -342,8 +342,8 @@ while(-1)
                 }
 	
 	
-	
-	saveTemperature(cTemp);
+	float kTemp = TempkalmanFilter(cTemp);
+	saveTemperature((int)kTemp);
 	
 	char query_2[255] = "";
 
