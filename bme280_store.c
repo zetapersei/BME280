@@ -43,6 +43,7 @@ struct tm *local;
 MYSQL *connection, mysql;
 
 static const char LANG_DB_TEMP_DIFF[] = "\nWARNING: Temperature difference out of bonds (%f to %f). Data will NOT be saved!\n";
+static const char LANG_DB_HUMID_DIFF[] = "\nWARNING: Humidity value out of bonds (%i %%). Data will NOT be saved!\n";
 
 
 //------------------------------------------------------------------
@@ -93,7 +94,7 @@ float HumkalmanFilter(float inData)
 void saveTemperature(int temperature)
 {
 	static signed int t_old_min = -1;
-	static int old_value = -FLT_MAX;
+	static float old_value = -FLT_MAX;
 
 	t = time(NULL);
 	local = localtime(&t);
@@ -125,6 +126,40 @@ void saveTemperature(int temperature)
 
 	t_old_min = local->tm_min;
 	old_value = temperature;
+}
+
+
+void saveHumidity(unsigned int humidity)
+{
+	static signed int h_old_min = -1;
+	static float old_value = -FLT_MAX;
+
+	t = time(NULL);
+	local = localtime(&t);
+
+	/* Store if value has changed or not from same minute */
+	if (h_old_min != local->tm_min || old_value != humidity) {
+
+		/* Check for invalid values */
+		if (humidity <= 0 || humidity > 100) {
+			fprintf(stderr, LANG_DB_HUMID_DIFF, humidity);
+			return;
+		}
+
+		char query[255] = "";
+
+        sprintf( query, "INSERT INTO wr_humidity (sensor_id, value) " "VALUES(5, %u)", humidity);
+
+        int state = mysql_query(connection, query);
+
+        if (state != 0) {
+                printf("%s", mysql_error(connection));
+                return 1;
+                }
+	}
+
+	h_old_min = local->tm_min;
+	old_value = humidity;
 }
 
 
@@ -330,20 +365,12 @@ while(-1)
 	printf("Relative Humidity : %.2f RH \n", humidity);
 	
 	
-	char query[255] = "";
-
-        sprintf( query, "INSERT INTO wr_humidity (sensor_id, value) " "VALUES(5, %.f)",HumkalmanFilter(humidity));
-
-        int state = mysql_query(connection, query);
-
-        if (state != 0) {
-                printf("%s", mysql_error(connection));
-                return 1;
-                }
-	
 	
 	float kTemp = TempkalmanFilter(cTemp);
 	saveTemperature((int)kTemp);
+	
+	float kHum = HumkalmanFilter(humidity);
+	saveHumidity((int)kHum);
 	
 	char query_2[255] = "";
 
@@ -355,6 +382,7 @@ while(-1)
                 printf("%s", mysql_error(connection));
                 return 1;
                 }
+	
 	sleep(3);
    }
 	
