@@ -206,7 +206,7 @@ void savePressure(int pressure)
 
 // ----------------------------------------------------------------------------
 
-void main()
+int main(int argc, char *argv[])
 {
 	pid_t pid, sid;
 
