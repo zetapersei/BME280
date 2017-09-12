@@ -438,10 +438,10 @@ while(-1)
 	}
 
 	// Output data to screen
-	printf("Temperature in Celsius : %.2f C \n", cTemp);
-	printf("Temperature in Fahrenheit : %.2f F \n", fTemp);
-	printf("Pressure : %.2f hPa \n", pressure);
-	printf("Relative Humidity : %.2f RH \n", humidity);
+	// printf("Temperature in Celsius : %.2f C \n", cTemp);
+	// printf("Temperature in Fahrenheit : %.2f F \n", fTemp);
+	// printf("Pressure : %.2f hPa \n", pressure);
+	// printf("Relative Humidity : %.2f RH \n", humidity);
 	
 	
 	
@@ -453,7 +453,7 @@ while(-1)
 	
 	savePressure((int)pressure);
 	
-	sleep(3);
+	sleep(1);
    }
 	
 	mysql_close(connection);
