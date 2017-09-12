@@ -25,6 +25,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <limits.h>
 #include <time.h>
 #include <float.h>
 #include <math.h>
@@ -94,18 +95,18 @@ float HumkalmanFilter(float inData)
 void saveTemperature(int temperature)
 {
 	static signed int t_old_min = -1;
-	static float old_value = -FLT_MAX;
+	static int old_value = -INT_MAX;
 
 	t = time(NULL);
 	local = localtime(&t);
 
 	/* Store if value has changed or not from same minute */
-	if (t_old_min != local->tm_min || old_value != temperature) {
+	if (t_old_min != local->tm_hour || old_value != temperature) {
 
 		/* Check for invalid values */
 		int difference = old_value - temperature;
 		if ((difference < -TEMP_DIFF || difference > TEMP_DIFF)
-		    && old_value != -FLT_MAX) {
+		    && old_value != -INT_MAX) {
 			printf(LANG_DB_TEMP_DIFF, old_value, temperature);
 			return;
 		}
@@ -124,7 +125,7 @@ void saveTemperature(int temperature)
 		
 	}
 
-	t_old_min = local->tm_min;
+	t_old_min = local->tm_hour;
 	old_value = temperature;
 }
 
@@ -132,13 +133,13 @@ void saveTemperature(int temperature)
 void saveHumidity(unsigned int humidity)
 {
 	static signed int h_old_min = -1;
-	static float old_value = -FLT_MAX;
+	static int old_value = -INT_MAX;
 
 	t = time(NULL);
 	local = localtime(&t);
 
 	/* Store if value has changed or not from same minute */
-	if (h_old_min != local->tm_min || old_value != humidity) {
+	if (h_old_min != local->tm_hour || old_value != humidity) {
 
 		/* Check for invalid values */
 		if (humidity <= 0 || humidity > 100) {
@@ -158,9 +159,47 @@ void saveHumidity(unsigned int humidity)
                 }
 	}
 
-	h_old_min = local->tm_min;
+	h_old_min = local->tm_hour;
 	old_value = humidity;
 }
+
+void savePressure(int pressure)
+{
+	static signed int t_old_min = -1;
+	static int old_value = -INT_MAX;
+
+	t = time(NULL);
+	local = localtime(&t);
+
+	/* Store if value has changed or not from same minute */
+	if (t_old_min != local->tm_hour || old_value != pressure) {
+
+		/* Check for invalid values */
+		int difference = old_value - pressure;
+		if ((difference < -TEMP_DIFF || difference > TEMP_DIFF)
+		    && old_value != -INT_MAX) {
+			printf(LANG_DB_TEMP_DIFF, old_value, pressure);
+			return;
+		}
+
+		char query_1[255] = "";
+
+        	sprintf( query_1, "INSERT INTO wr_barometer (sensor_id, value) " "VALUES(5, %u)", pressure );
+
+        	int state = mysql_query(connection, query_1);
+
+        	if (state != 0) {
+                	printf("%s", mysql_error(connection));
+                	return 1;
+                }
+			
+		
+	}
+
+	t_old_min = local->tm_hour;
+	old_value = pressure;
+}
+
 
 
 // ----------------------------------------------------------------------------
@@ -372,16 +411,7 @@ while(-1)
 	float kHum = HumkalmanFilter(humidity);
 	saveHumidity((int)kHum);
 	
-	char query_2[255] = "";
-
-        sprintf( query_2, "INSERT INTO wr_barometer(sensor_id, value) " "VALUES(5, %.f)", pressure);
-
-        state = mysql_query(connection, query_2);
-
-        if (state != 0) {
-                printf("%s", mysql_error(connection));
-                return 1;
-                }
+	savePressure((int)pressure);
 	
 	sleep(3);
    }
