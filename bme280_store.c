@@ -93,6 +93,25 @@ float HumkalmanFilter(float inData)
     return inData;
     }
 
+float PresskalmanFilter(float inData)
+    {                        
+    static float presprevData=0;
+    static float presp=10, presq=0.0001, presr=0.05, preskGain=0;
+ 
+    //Kalman filter function start*******************************
+    presp = presp+presq;
+    preskGain = presp/(presp+presr);
+ 
+    inData = presprevData+(preskGain*(inData-presprevData));
+ 
+    presp = (1-preskGain)*presp;
+ 
+	presprevData = inData;
+    //Kalman filter function stop********************************
+ 
+    return inData;
+    }
+
 
 void saveTemperature(int temperature)
 {
@@ -451,7 +470,8 @@ while(-1)
 	float kHum = HumkalmanFilter(humidity);
 	saveHumidity((int)kHum);
 	
-	savePressure((int)pressure);
+	float kPress = PresskalmanFilter(pressure);
+	savePressure((int)kPress);
 	
 	sleep(1);
    }
