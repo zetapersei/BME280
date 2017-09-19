@@ -55,6 +55,14 @@ static const char LANG_DB_HUMID_DIFF[] = "\nWARNING: Humidity value out of bonds
 //www.xuan.idv.tw
 //------------------------------------------------------------------
 
+float ConvertFormat(float formData)
+    {
+	char tempdata[5] = "";
+	sprintf(tempdata,"%.1f", formData);
+	float finalTemp = atof(tempdata);
+	return finalTemp;
+     }
+
 float TempkalmanFilter(float inData)
     {                        
     static float tempprevData=0;
@@ -465,7 +473,7 @@ while(-1)
 	
 	
 	float kTemp = TempkalmanFilter(cTemp);
-	saveTemperature((int)kTemp);
+	saveTemperature(ConvertFormat(kTemp));
 	
 	float kHum = HumkalmanFilter(humidity);
 	saveHumidity((int)kHum);
