@@ -1,6 +1,6 @@
-bme280_store.o: bme280_store.c
+bme280_store.o: bme280_store.cpp
 
-	gcc  -Wall -pedantic -std=c99  bme280_store.c  `mysql_config --cflags --libs` -o bme280_store
+	gcc  -Wall -pedantic -fpermissive -std=c++11  bme280_store.cpp  `mysql_config --cflags --libs` -o bme280_store
 
 clean:
 
