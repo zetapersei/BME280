@@ -33,6 +33,7 @@
 #include <math.h>
 #include <linux/i2c-dev.h>
 #include <sys/ioctl.h>
+#include <sys/stat.h>
 #include <fcntl.h>
 #include <mysql.h>
 #include "Kalman.h"
