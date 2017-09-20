@@ -49,12 +49,8 @@ MYSQL *connection, mysql;
 static const char LANG_DB_TEMP_DIFF[] = "\nWARNING: Temperature difference out of bonds (%f to %f). Data will NOT be saved!\n";
 static const char LANG_DB_HUMID_DIFF[] = "\nWARNING: Humidity value out of bonds (%i %%). Data will NOT be saved!\n";
 
+Kalman myFilter(0.125,32,1023,0); //suggested initial values for high noise filtering
 
-//------------------------------------------------------------------
-//Kalman Filter
-//By Jed 2013/12/23
-//www.xuan.idv.tw
-//------------------------------------------------------------------
 
 float ConvertFormat(float formData)
     {
@@ -64,62 +60,6 @@ float ConvertFormat(float formData)
 	return finalTemp;
      }
 
-float TempkalmanFilter(float inData)
-    {                        
-    static float tempprevData=0;
-    static float tempp=10, tempq=0.0001, tempr=0.05, tempkGain=0;
- 
-    //Kalman filter function start*******************************
-    tempp = tempp+tempq;
-    tempkGain = tempp/(tempp+tempr);
- 
-    inData = tempprevData+(tempkGain*(inData-tempprevData));
- 
-    tempp = (1-tempkGain)*tempp;
- 
-	tempprevData = inData;
-    //Kalman filter function stop********************************
- 
-    return inData;
-    }
-
-float HumkalmanFilter(float inData)
-    {                        
-    static float humprevData=0;
-    static float hump=10, humq=0.0001, humr=0.05, humkGain=0;
- 
-    //Kalman filter function start*******************************
-    hump = hump+humq;
-    humkGain = hump/(hump+humr);
- 
-    inData = humprevData+(humkGain*(inData-humprevData));
- 
-    hump = (1-humkGain)*hump;
- 
-	humprevData = inData;
-    //Kalman filter function stop********************************
- 
-    return inData;
-    }
-
-float PresskalmanFilter(float inData)
-    {                        
-    static float presprevData=0;
-    static float presp=10, presq=0.0001, presr=0.05, preskGain=0;
- 
-    //Kalman filter function start*******************************
-    presp = presp+presq;
-    preskGain = presp/(presp+presr);
- 
-    inData = presprevData+(preskGain*(inData-presprevData));
- 
-    presp = (1-preskGain)*presp;
- 
-	presprevData = inData;
-    //Kalman filter function stop********************************
- 
-    return inData;
-    }
 
 
 void saveTemperature(int temperature)
@@ -473,13 +413,13 @@ while(-1)
 	
 	
 	
-	float kTemp = TempkalmanFilter(cTemp);
+	float kTemp = myFilter.getFilteredValue(cTemp);
 	saveTemperature(ConvertFormat(kTemp));
 	
-	float kHum = HumkalmanFilter(humidity);
+	float kHum = myFilter.getFilteredValue(humidity);
 	saveHumidity((int)kHum);
 	
-	float kPress = PresskalmanFilter(pressure);
+	float kPress = myFilter.getFilteredValue(pressure);
 	savePressure((int)kPress);
 	
 	sleep(1);
