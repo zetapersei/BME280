@@ -35,6 +35,7 @@
 #include <sys/ioctl.h>
 #include <fcntl.h>
 #include <mysql.h>
+#include "Kalman.h"
 
 #define TEMP_DIFF 10
 time_t t;
