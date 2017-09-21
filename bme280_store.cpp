@@ -63,10 +63,10 @@ float ConvertFormat(float formData)
 
 
 
-void saveTemperature(int temperature)
+void saveTemperature(float temperature)
 {
 	static signed int t_old_min = -1;
-	static int old_value = -INT_MAX;
+	static float old_value = -FLT_MAX;
 
 	t = time(NULL);
 	local = localtime(&t);
@@ -75,16 +75,16 @@ void saveTemperature(int temperature)
 	if (t_old_min != local->tm_hour || old_value != temperature) {
 
 		/* Check for invalid values */
-		int difference = old_value - temperature;
+		float difference = old_value - temperature;
 		if ((difference < -TEMP_DIFF || difference > TEMP_DIFF)
-		    && old_value != -INT_MAX) {
+		    && old_value != -FLT_MAX) {
 			printf(LANG_DB_TEMP_DIFF, old_value, temperature);
 			return;
 		}
 
 		char query_1[255] = "";
 
-        	sprintf( query_1, "INSERT INTO wr_temperature (sensor_id, value) " "VALUES(5, %u)", temperature );
+        	sprintf( query_1, "INSERT INTO wr_temperature (sensor_id, value) " "VALUES(5, %.1f)", temperature );
 
         	int state = mysql_query(connection, query_1);
 
