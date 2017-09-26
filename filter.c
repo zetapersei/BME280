@@ -13,7 +13,7 @@ typedef enum {
 	HUMIDITY    = 2,
 	WINDSPEED   = 4,
 	WINDGUST    = 8,
-	WINDDIR  	= 16,
+	WINDDIR     = 16,
 	RAINTOTAL   = 32,
 	SWITCH      = 64,
 	BAROMETER   = 128,
@@ -23,8 +23,8 @@ typedef enum {
 } SensorType;
 
 
-typedef struct {		//							Temp	Humid	Pellet	Baro
-	double  r;          // Sensor noise variance	 0.2	 2.0	 10		 2
+typedef struct {		//	Temp	Humid	Pellet	Baro
+	double  r;          // Sensor noise variance	 0.2	 2.0	 10	  2
 	double  pn;         // Process noise variance	 0.01	 0.05	 0.05	 0.25
 	double  p;          // Predicted error
 	double  x;          // Predicted value
@@ -123,7 +123,7 @@ DataFloat *sensorDataFloat() {
 typedef struct {
 	float              x;			// Wind vector X
 	float              y;			// Wind vector Y
-	time_t             save_time;	// Next save time
+	time_t             save_time;	        // Next save time
 	time_t             next_tx;		// Time to new transmission
 	unsigned int       rowid;		// Database row
 	struct DataSample *head;		// Fisrst stored value
@@ -134,7 +134,7 @@ typedef struct {
 	unsigned int     rowid;		// Database row
 	char            *name;		// Name of sensor
 	unsigned int     sensor_id;	// Sensors own id
-	char    		 protocol[5];	// Protocol
+	char    	 protocol[5];	// Protocol
 	unsigned char    channel;	// Sensor channel
 	unsigned char    rolling;	// Random code
 	unsigned char    battery;	// Sensor battery status Full = 1
