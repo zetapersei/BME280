@@ -50,7 +50,9 @@ MYSQL *connection, mysql;
 static const char LANG_DB_TEMP_DIFF[] = "\nWARNING: Temperature difference out of bonds (%f to %f). Data will NOT be saved!\n";
 static const char LANG_DB_HUMID_DIFF[] = "\nWARNING: Humidity value out of bonds (%i %%). Data will NOT be saved!\n";
 
-Kalman myFilter(0.125,32,1023,0); //suggested initial values for high noise filtering
+Kalman myFilterTemp(0.125,32,1023,0); //suggested initial values for high noise filtering
+Kalman myFilterHum(0.125,32,1023,0);
+Kalman myFilterPress(0.125,32,1023,0);
 
 
 float ConvertFormat(float formData)
@@ -414,13 +416,13 @@ while(-1)
 	
 	
 	
-	float kTemp = myFilter.getFilteredValue(cTemp);
+	float kTemp = myFilterTemp.getFilteredValue(cTemp);
 	saveTemperature(ConvertFormat(kTemp));
 	
-	float kHum = myFilter.getFilteredValue(humidity);
+	float kHum = myFilterHum.getFilteredValue(humidity);
 	saveHumidity((int)kHum);
 	
-	float kPress = myFilter.getFilteredValue(pressure);
+	float kPress = myFilterPress.getFilteredValue(pressure);
 	savePressure((int)kPress);
 	
 	sleep(1);
