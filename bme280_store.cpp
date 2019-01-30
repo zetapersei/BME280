@@ -350,7 +350,7 @@ int main(int argc, char *argv[])
 	
 	// Initialization Mysql
 	mysql_init(&mysql);
-        connection = mysql_real_connect(&mysql,"localhost", "pico", "maurizio", 
+        connection = mysql_real_connect(&mysql,"localhost", "user", "password", 
                                     "weather", 0, 0, 0);
 
         if (connection == NULL) {
